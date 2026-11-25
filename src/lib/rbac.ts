@@ -105,10 +105,23 @@ export async function requireApiAuth(allowedRoles?: Role[]): Promise<
     };
   }
 
-  const dbUser = await prisma.user.findUnique({
-    where: { id: sessionUser.id },
-    select: { id: true, email: true, name: true, role: true, preferredLang: true, isActive: true },
-  });
+  let dbUser = null;
+  try {
+    dbUser = await prisma.user.findUnique({
+      where: { id: sessionUser.id },
+      select: { id: true, email: true, name: true, role: true, preferredLang: true, isActive: true },
+    });
+  } catch {
+    // If DB is unreachable, trust verified JWT session for demo/offline resilience
+    dbUser = {
+      id: sessionUser.id,
+      email: sessionUser.email,
+      name: sessionUser.name,
+      role: sessionUser.role,
+      preferredLang: sessionUser.preferredLang,
+      isActive: true,
+    };
+  }
 
   if (!dbUser || !dbUser.isActive) {
     return {
