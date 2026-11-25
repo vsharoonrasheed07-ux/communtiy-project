@@ -19,12 +19,18 @@ export function LanguageSwitcher({ compact = false }: { compact?: boolean }) {
   async function handleChange(nextLocale: string) {
     setSaving(true);
     try {
+      // Set cookie client-side immediately
+      document.cookie = `locale=${nextLocale}; path=/; max-age=31536000; SameSite=Lax`;
+      
+      // Also notify API
       await fetch('/api/locale', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ locale: nextLocale }),
-      });
-      router.refresh();
+      }).catch(() => undefined);
+
+      // Force full window reload so server components and RootLayout re-evaluate the cookie
+      window.location.reload();
     } finally {
       setSaving(false);
     }

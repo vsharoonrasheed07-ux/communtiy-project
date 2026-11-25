@@ -58,6 +58,8 @@ export default function StudentsPage() {
     firstName: '',
     lastName: '',
     gender: 'Female',
+    grade: '6',
+    section: 'A',
     classId: '',
     wardVillage: '',
     guardianName: '',
@@ -119,6 +121,8 @@ export default function StudentsPage() {
       firstName: '',
       lastName: '',
       gender: 'Female',
+      grade: '6',
+      section: 'A',
       classId: classes[0]?.id || '',
       wardVillage: '',
       guardianName: '',
@@ -141,6 +145,8 @@ export default function StudentsPage() {
       firstName: s.firstName,
       lastName: s.lastName,
       gender: s.gender,
+      grade: s.class.name.match(/\d+/)?.[0] || '6',
+      section: s.class.name.replace(/[^a-zA-Z]/g, '').slice(-1) || 'A',
       classId: s.class.id,
       wardVillage: s.wardVillage,
       guardianName: s.guardianName,
@@ -397,7 +403,7 @@ export default function StudentsPage() {
             )}
 
             <form onSubmit={handleSaveStudent} className="mt-4 space-y-3">
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-3 gap-3">
                 <div>
                   <label className="mb-1 block text-xs font-medium text-ink">Admission No</label>
                   <input
@@ -408,18 +414,32 @@ export default function StudentsPage() {
                   />
                 </div>
                 <div>
-                  <label className="mb-1 block text-xs font-medium text-ink">Class</label>
+                  <label className="mb-1 block text-xs font-medium text-ink">Class (1 - 10)</label>
                   <select
                     required
-                    value={form.classId}
-                    onChange={(e) => setForm({ ...form, classId: e.target.value })}
+                    value={form.grade}
+                    onChange={(e) => setForm({ ...form, grade: e.target.value })}
                     className="input-field"
                   >
-                    {classes.map((c) => (
-                      <option key={c.id} value={c.id}>
-                        {c.name}
+                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
+                      <option key={num} value={num}>
+                        Class {num}
                       </option>
                     ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="mb-1 block text-xs font-medium text-ink">Section</label>
+                  <select
+                    required
+                    value={form.section}
+                    onChange={(e) => setForm({ ...form, section: e.target.value })}
+                    className="input-field"
+                  >
+                    <option value="A">Section A</option>
+                    <option value="B">Section B</option>
+                    <option value="C">Section C</option>
+                    <option value="D">Section D</option>
                   </select>
                 </div>
               </div>

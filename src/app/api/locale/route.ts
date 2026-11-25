@@ -16,11 +16,15 @@ export async function POST(request: NextRequest) {
     }
 
     const user = await getSessionUser();
-    if (user) {
-      await prisma.user.update({
-        where: { id: user.id },
-        data: { preferredLang: parsed.data.locale },
-      });
+    if (user && !user.id.startsWith('demo-')) {
+      try {
+        await prisma.user.update({
+          where: { id: user.id },
+          data: { preferredLang: parsed.data.locale },
+        });
+      } catch {
+        // Ignore DB update error in demo mode
+      }
     }
 
     const res = NextResponse.json({ ok: true, locale: parsed.data.locale });

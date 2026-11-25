@@ -259,31 +259,52 @@ export default function SettingsPage() {
 
           <form onSubmit={createClass} className="space-y-2 border-t border-[#E0DDD2] pt-3">
             <p className="text-xs font-medium text-ink">Add Class</p>
-            <div className="grid grid-cols-3 gap-2">
-              <input
-                required
-                placeholder="Class 9A"
-                value={newClass.name}
-                onChange={(e) => setNewClass({ ...newClass, name: e.target.value })}
-                className="input-field"
-              />
-              <input
-                required
-                type="number"
-                placeholder="Grade"
-                value={newClass.grade}
-                onChange={(e) => setNewClass({ ...newClass, grade: e.target.value })}
-                className="input-field"
-              />
-              <input
-                required
-                placeholder="Section"
-                value={newClass.section}
-                onChange={(e) => setNewClass({ ...newClass, section: e.target.value })}
-                className="input-field"
-              />
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <label className="mb-1 block text-[11px] font-medium text-muted">Class (1 - 10)</label>
+                <select
+                  required
+                  value={newClass.grade}
+                  onChange={(e) => {
+                    const g = e.target.value;
+                    setNewClass({
+                      ...newClass,
+                      grade: g,
+                      name: `Class ${g}${newClass.section}`,
+                    });
+                  }}
+                  className="input-field"
+                >
+                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
+                    <option key={num} value={num}>
+                      Class {num}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="mb-1 block text-[11px] font-medium text-muted">Section (A - D)</label>
+                <select
+                  required
+                  value={newClass.section}
+                  onChange={(e) => {
+                    const sec = e.target.value;
+                    setNewClass({
+                      ...newClass,
+                      section: sec,
+                      name: `Class ${newClass.grade}${sec}`,
+                    });
+                  }}
+                  className="input-field"
+                >
+                  <option value="A">Section A</option>
+                  <option value="B">Section B</option>
+                  <option value="C">Section C</option>
+                  <option value="D">Section D</option>
+                </select>
+              </div>
             </div>
-            <div className="flex gap-2">
+            <div className="flex gap-2 pt-1">
               <select
                 value={newClass.teacherId}
                 onChange={(e) => setNewClass({ ...newClass, teacherId: e.target.value })}
@@ -298,7 +319,7 @@ export default function SettingsPage() {
                     </option>
                   ))}
               </select>
-              <button type="submit" className="btn-primary text-xs">
+              <button type="submit" className="btn-primary text-xs shrink-0">
                 Add Class
               </button>
             </div>
