@@ -1,0 +1,87 @@
+{
+  "app": {
+    "name": "StayInSchool",
+    "tagline": "School Dropout Tracking & Follow-up System",
+    "privacyNote": "Privacy Notice: Student records are confidential educational data protected by role-based access controls and audit logging.",
+    "offlineIndicator": "Offline — changes queued in device storage and will sync automatically when online",
+    "syncingIndicator": "Syncing queued offline attendance...",
+    "onlineSynced": "All attendance records synced",
+    "signOut": "Sign out",
+    "language": "Language",
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "search": "Search",
+    "filter": "Filter",
+    "exportCsv": "Export CSV",
+    "exportPdf": "Export PDF"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "students": "Students",
+    "attendance": "Attendance",
+    "atRisk": "At-risk",
+    "cases": "Cases",
+    "reEnrolment": "Re-enrolment",
+    "reports": "Reports",
+    "schemes": "Schemes",
+    "guardianPortal": "Guardian Portal",
+    "settings": "Settings",
+    "auditLog": "Audit Log"
+  },
+  "login": {
+    "title": "Sign in to StayInSchool",
+    "subtitle": "Early identification and compassionate follow-up to keep every child learning.",
+    "email": "Email address",
+    "password": "Password",
+    "submit": "Sign in",
+    "demoTitle": "Demo Accounts"
+  },
+  "dashboard": {
+    "title": "Overview",
+    "totalStudents": "Total Students",
+    "highRisk": "High Risk",
+    "openCases": "Open Cases",
+    "reEnrolled": "Re-enrolled",
+    "needsFollowUpToday": "Needs Follow-up Today",
+    "casePipeline": "Case Pipeline",
+    "absenceTrend": "14-Day Absence Trend",
+    "all": "All",
+    "high": "High",
+    "medium": "Medium",
+    "low": "Low",
+    "resolved": "Resolved"
+  },
+  "risk": {
+    "HIGH": "High Risk",
+    "MEDIUM": "Medium Risk",
+    "LOW": "Low Risk"
+  },
+  "stages": {
+    "FLAGGED": "Flagged",
+    "CONTACTED": "Contacted",
+    "HOME_VISIT": "Home visit",
+    "RESOLVED": "Resolved",
+    "DROPPED_OUT": "Dropped out"
+  },
+  "attendance": {
+    "title": "Daily Attendance",
+    "selectClass": "Class",
+    "selectDate": "Date",
+    "present": "Present",
+    "absent": "Absent",
+    "late": "Late",
+    "saveAttendance": "Save Attendance",
+    "saved": "Attendance saved and risk scores updated",
+    "queuedOffline": "Saved offline — will sync automatically when reconnected"
+  },
+  "guardian": {
+    "title": "Guardian Portal",
+    "subtitle": "Attendance summary and school messages for your child",
+    "attendanceRate": "Attendance Rate",
+    "recentAttendance": "Recent Attendance",
+    "messages": "Messages with Teacher",
+    "replyPlaceholder": "Write a reply to the teacher...",
+    "sendReply": "Send Reply"
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "app": {
+    "name": "StayInSchool",
+    "tagline": "स्कूल ड्रॉपआउट ट्रैकिंग और फॉलो-अप प्रणाली",
+    "privacyNote": "गोपनीयता सूचना: छात्र रिकॉर्ड गोपनीय शैक्षिक डेटा हैं जो भूमिका-आधारित पहुंच और ऑडिट लॉगिंग द्वारा सुरक्षित हैं।",
+    "offlineIndicator": "ऑफ़लाइन — बदलाव डिवाइस में सहेजे गए हैं और ऑनलाइन होने पर सिंक होंगे",
+    "syncingIndicator": "ऑफ़लाइन उपस्थिति सिंक हो रही है...",
+    "onlineSynced": "सभी उपस्थिति रिकॉर्ड सिंक हो गए",
+    "signOut": "साइन आउट",
+    "language": "भाषा",
+    "loading": "लोड हो रहा है...",
+    "save": "सहेजें",
+    "cancel": "रद्द करें",
+    "search": "खोजें",
+    "filter": "फ़िल्टर",
+    "exportCsv": "CSV निर्यात",
+    "exportPdf": "PDF निर्यात"
+  },
+  "nav": {
+    "dashboard": "डैशबोर्ड",
+    "students": "छात्र",
+    "attendance": "उपस्थिति",
+    "atRisk": "जोखिम में",
+    "cases": "मामले",
+    "reEnrolment": "पुनः नामांकन",
+    "reports": "रिपोर्ट",
+    "schemes": "योजनाएं",
+    "guardianPortal": "अभिभावक पोर्टल",
+    "settings": "सेटिंग्स",
+    "auditLog": "ऑडिट लॉग"
+  },
+  "login": {
+    "title": "StayInSchool में साइन इन करें",
+    "subtitle": "हर बच्चे की शिक्षा जारी रखने के लिए समय पर पहचान और फॉलो-अप।",
+    "email": "ईमेल पता",
+    "password": "पासवर्ड",
+    "submit": "साइन इन करें",
+    "demoTitle": "डेमो खाते"
+  },
+  "dashboard": {
+    "title": "सारांश",
+    "totalStudents": "कुल छात्र",
+    "highRisk": "उच्च जोखिम",
+    "openCases": "खुले मामले",
+    "reEnrolled": "पुनः नामांकित",
+    "needsFollowUpToday": "आज फॉलो-अप आवश्यक",
+    "casePipeline": "केस पाइपलाइन",
+    "absenceTrend": "14-दिन अनुपस्थिति रुझान",
+    "all": "सभी",
+    "high": "उच्च",
+    "medium": "मध्यम",
+    "low": "कम",
+    "resolved": "समाधान"
+  },
+  "risk": {
+    "HIGH": "उच्च जोखिम",
+    "MEDIUM": "मध्यम जोखिम",
+    "LOW": "कम जोखिम"
+  },
+  "stages": {
+    "FLAGGED": "चिह्नित",
+    "CONTACTED": "संपर्क किया",
+    "HOME_VISIT": "गृह भेंट",
+    "RESOLVED": "समाधान",
+    "DROPPED_OUT": "ड्रॉपआउट"
+  },
+  "attendance": {
+    "title": "दैनिक उपस्थिति",
+    "selectClass": "कक्षा",
+    "selectDate": "तारीख",
+    "present": "उपस्थित",
+    "absent": "अनुपस्थित",
+    "late": "देर से",
+    "saveAttendance": "उपस्थिति सहेजें",
+    "saved": "उपस्थिति सहेजी गई और जोखिम स्कोर अपडेट हुए",
+    "queuedOffline": "ऑफ़लाइन सहेजा गया — इंटरनेट आने पर सिंक होगा"
+  },
+  "guardian": {
+    "title": "अभिभावक पोर्टल",
+    "subtitle": "आपके बच्चे की उपस्थिति और स्कूल संदेश",
+    "attendanceRate": "उपस्थिति दर",
+    "recentAttendance": "हाल की उपस्थिति",
+    "messages": "शिक्षक के साथ संदेश",
+    "replyPlaceholder": "शिक्षक को उत्तर लिखें...",
+    "sendReply": "उत्तर भेजें"
+  }
+}
