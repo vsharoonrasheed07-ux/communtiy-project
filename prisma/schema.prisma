@@ -1,0 +1,334 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  TEACHER
+  PRINCIPAL
+  ADMIN
+  GUARDIAN
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+  LATE
+}
+
+enum RiskLevel {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum CaseStage {
+  FLAGGED
+  CONTACTED
+  HOME_VISIT
+  RESOLVED
+  DROPPED_OUT
+}
+
+enum FollowUpType {
+  CALL
+  SMS
+  WHATSAPP
+  HOME_VISIT
+  COUNSELLING
+}
+
+enum DropoutReason {
+  FEES
+  MIGRATION
+  WORK
+  MARRIAGE
+  HEALTH
+  DISTANCE
+  NO_INTEREST
+  OTHER
+}
+
+model User {
+  id            String   @id @default(cuid())
+  name          String
+  email         String   @unique
+  passwordHash  String
+  role          Role     @default(TEACHER)
+  phone         String?
+  preferredLang String   @default("en")
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  classes          Class[]           @relation("ClassTeacher")
+  guardianStudents Student[]         @relation("GuardianStudents")
+  assignedCases    Case[]            @relation("CaseAssignee")
+  followUps        FollowUp[]        @relation("FollowUpAuthor")
+  auditLogs        AuditLog[]
+  guardianMessages GuardianMessage[]
+  notifications    Notification[]
+  attachments      Attachment[]
+  markedAttendance Attendance[]      @relation("AttendanceMarker")
+}
+
+model Class {
+  id           String   @id @default(cuid())
+  name         String   @unique
+  grade        Int
+  section      String
+  academicYear String   @default("2026-27")
+  teacherId    String?
+  teacher      User?    @relation("ClassTeacher", fields: [teacherId], references: [id], onDelete: SetNull)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  students Student[]
+}
+
+model Student {
+  id                  String         @id @default(cuid())
+  admissionNo         String         @unique
+  firstName           String
+  lastName            String
+  gender              String         @default("Other")
+  dateOfBirth         DateTime?
+  classId             String
+  class               Class          @relation(fields: [classId], references: [id], onDelete: Restrict)
+  wardVillage         String
+  address             String?
+  guardianName        String
+  guardianPhone       String
+  guardianRelation    String         @default("Parent")
+  guardianUserId      String?
+  guardianUser        User?          @relation("GuardianStudents", fields: [guardianUserId], references: [id], onDelete: SetNull)
+
+  // Risk factor inputs
+  pendingFees         Boolean        @default(false)
+  distanceKm          Float          @default(1.0)
+  flagMigration       Boolean        @default(false)
+  flagHealth          Boolean        @default(false)
+  flagChildLabour     Boolean        @default(false)
+  flagEarlyMarriage   Boolean        @default(false)
+
+  // Computed risk fields
+  riskScore           Int            @default(0)
+  riskLevel           RiskLevel      @default(LOW)
+  riskReasons         Json           @default("[]")
+  attendanceRate      Float          @default(100)
+  consecutiveAbsences Int            @default(0)
+  averageMarks        Float          @default(75)
+
+  // Re-enrolment and dropout tracking
+  isDroppedOut        Boolean        @default(false)
+  reEnrolled          Boolean        @default(false)
+  reEnrolledAt        DateTime?
+  dropoutReason       DropoutReason?
+  supportGiven        String?
+
+  createdAt           DateTime       @default(now())
+  updatedAt           DateTime       @updatedAt
+
+  attendance          Attendance[]
+  marks               Mark[]
+  cases               Case[]
+  followUps           FollowUp[]
+  attachments         Attachment[]
+  guardianMessages    GuardianMessage[]
+  notifications       Notification[]
+  communicationLogs   CommunicationLog[]
+
+  @@index([classId])
+  @@index([riskLevel])
+  @@index([wardVillage])
+  @@index([guardianUserId])
+}
+
+model Attendance {
+  id                String           @id @default(cuid())
+  studentId         String
+  student           Student          @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  date              DateTime         @db.Date
+  status            AttendanceStatus
+  markedById        String?
+  markedBy          User?            @relation("AttendanceMarker", fields: [markedById], references: [id], onDelete: SetNull)
+  syncedFromOffline Boolean          @default(false)
+  notes             String?
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+
+  @@unique([studentId, date])
+  @@index([date])
+}
+
+model Mark {
+  id         String   @id @default(cuid())
+  studentId  String
+  student    Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  subject    String
+  examName   String
+  score      Float
+  maxScore   Float    @default(100)
+  recordedAt DateTime @default(now())
+  createdAt  DateTime @default(now())
+
+  @@index([studentId])
+}
+
+model Case {
+  id                   String         @id @default(cuid())
+  studentId            String
+  student              Student        @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  stage                CaseStage      @default(FLAGGED)
+  assignedToId         String?
+  assignedTo           User?          @relation("CaseAssignee", fields: [assignedToId], references: [id], onDelete: SetNull)
+  escalatedToPrincipal Boolean        @default(false)
+  escalatedAt          DateTime?
+  dropoutReason        DropoutReason?
+  supportGiven         String?
+  notes                String?
+  lastActionAt         DateTime       @default(now())
+  openedAt             DateTime       @default(now())
+  resolvedAt           DateTime?
+  updatedAt            DateTime       @updatedAt
+
+  followUps     FollowUp[]
+  notifications Notification[]
+
+  @@index([studentId])
+  @@index([stage])
+  @@index([assignedToId])
+}
+
+model FollowUp {
+  id               String       @id @default(cuid())
+  caseId           String
+  case             Case         @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  studentId        String
+  student          Student      @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  authorId         String?
+  author           User?        @relation("FollowUpAuthor", fields: [authorId], references: [id], onDelete: SetNull)
+  type             FollowUpType
+  outcome          String
+  notes            String
+  nextFollowUpDate DateTime?
+  reminderSent     Boolean      @default(false)
+  createdAt        DateTime     @default(now())
+
+  attachments Attachment[]
+
+  @@index([caseId])
+  @@index([studentId])
+  @@index([nextFollowUpDate])
+}
+
+model Attachment {
+  id           String    @id @default(cuid())
+  studentId    String
+  student      Student   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  followUpId   String?
+  followUp     FollowUp? @relation(fields: [followUpId], references: [id], onDelete: SetNull)
+  uploadedById String?
+  uploadedBy   User?     @relation(fields: [uploadedById], references: [id], onDelete: SetNull)
+  fileName     String
+  mimeType     String
+  fileSize     Int
+  data         Bytes
+  caption      String?
+  createdAt    DateTime  @default(now())
+
+  @@index([studentId])
+}
+
+model GuardianMessage {
+  id         String   @id @default(cuid())
+  studentId  String
+  student    Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  senderId   String?
+  sender     User?    @relation(fields: [senderId], references: [id], onDelete: SetNull)
+  senderRole Role
+  channel    String   @default("PORTAL")
+  body       String
+  createdAt  DateTime @default(now())
+
+  @@index([studentId])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  studentId String?
+  student   Student? @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  caseId    String?
+  case      Case?    @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  title     String
+  message   String
+  type      String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([userId, isRead])
+}
+
+model CommunicationLog {
+  id         String   @id @default(cuid())
+  provider   String
+  channel    String
+  recipient  String
+  studentId  String?
+  student    Student? @relation(fields: [studentId], references: [id], onDelete: SetNull)
+  subject    String?
+  body       String
+  status     String   @default("SENT")
+  externalId String?
+  createdAt  DateTime @default(now())
+
+  @@index([studentId])
+  @@index([channel])
+}
+
+model RiskRuleSettings {
+  id                        String   @id @default("default")
+  attendanceThresholdPct    Int      @default(75)
+  attendancePoints          Int      @default(30)
+  consecutiveAbsenceDays    Int      @default(5)
+  consecutiveAbsencePoints  Int      @default(25)
+  failingMarksThresholdPct  Int      @default(35)
+  failingMarksPoints        Int      @default(15)
+  pendingFeesPoints         Int      @default(10)
+  longDistanceKm            Float    @default(3.0)
+  longDistancePoints        Int      @default(10)
+  migrationPoints           Int      @default(10)
+  healthPoints              Int      @default(10)
+  childLabourPoints         Int      @default(10)
+  earlyMarriagePoints       Int      @default(10)
+  mediumRiskThreshold       Int      @default(35)
+  highRiskThreshold         Int      @default(65)
+  smsAlertConsecutiveDays   Int      @default(3)
+  escalationDays            Int      @default(7)
+  defaultLanguage           String   @default("en")
+  updatedAt                 DateTime @updatedAt
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userEmail  String?
+  userRole   Role?
+  action     String
+  entityType String
+  entityId   String?
+  details    Json?
+  ipAddress  String?
+  createdAt  DateTime @default(now())
+
+  @@index([userId])
+  @@index([entityType, entityId])
+  @@index([createdAt])
+}
