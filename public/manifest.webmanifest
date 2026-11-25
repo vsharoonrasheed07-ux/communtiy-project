@@ -1,0 +1,24 @@
+{
+  "name": "StayInSchool — Dropout Tracking & Follow-up",
+  "short_name": "StayInSchool",
+  "description": "Identify students at risk of dropping out early and coordinate compassionate follow-up.",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#F0EDE2",
+  "theme_color": "#17423B",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

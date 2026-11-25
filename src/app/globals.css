@@ -1,0 +1,85 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html,
+  body {
+    background-color: #f0ede2;
+    color: #1a2421;
+    font-family: var(--font-inter), Inter, system-ui, -apple-system, sans-serif;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  *:focus-visible {
+    outline: 2px solid #1f6f61;
+    outline-offset: 2px;
+  }
+}
+
+.card {
+  background-color: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e0ddd2;
+}
+
+.btn-primary {
+  background-color: #1f6f61;
+  color: #ffffff;
+  font-weight: 500;
+  min-height: 44px;
+  border-radius: 10px;
+  padding: 0 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background-color 150ms ease;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: #185a4e;
+}
+
+.btn-primary:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background-color: #ffffff;
+  color: #1a2421;
+  border: 1px solid #d4d0c5;
+  font-weight: 500;
+  min-height: 44px;
+  border-radius: 10px;
+  padding: 0 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background-color 150ms ease;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: #f6f4ec;
+}
+
+.input-field {
+  width: 100%;
+  min-height: 44px;
+  border-radius: 10px;
+  border: 1px solid #d4d0c5;
+  background-color: #ffffff;
+  padding: 8px 12px;
+  color: #1a2421;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.input-field:focus {
+  border-color: #1f6f61;
+  outline: 2px solid #1f6f61;
+  outline-offset: 1px;
+}
